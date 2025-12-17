@@ -1,8 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Bookstore.wpf.DataAccess.Configurations;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Reflection.Emit;
 
-namespace Bookstore.wpf;
+namespace Bookstore.wpf.DataAccess;
 
 public partial class BookstoreContext : DbContext
 {
@@ -241,23 +243,8 @@ public partial class BookstoreContext : DbContext
                 .HasConstraintName("FK_Recensioner_Kunder");
         });
 
-        modelBuilder.Entity<TitlarPerFörfattare>(entity =>
-        {
-            entity
-                .HasNoKey()
-                .ToView("TitlarPerFörfattare");
-
-            entity.Property(e => e.Lagervärde)
-                .HasMaxLength(44)
-                .IsUnicode(false);
-            entity.Property(e => e.Namn).HasMaxLength(41);
-            entity.Property(e => e.Titlar)
-                .HasMaxLength(15)
-                .IsUnicode(false);
-            entity.Property(e => e.Ålder)
-                .HasMaxLength(15)
-                .IsUnicode(false);
-        });
+        //added according to teacher's demo-video (058):
+        new TitlarPerFörfattareEntityTypeConfiguration().Configure(modelBuilder.Entity<TitlarPerFörfattare>());
 
         OnModelCreatingPartial(modelBuilder);
     }
