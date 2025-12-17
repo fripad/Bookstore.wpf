@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Bookstore.wpf.DataAccess.Configurations;
 
-//according to teacher's demo-video (058), moved configuration for TitlarPerFörFattare from OnModelCreating() into new class TitlarPerFörfattareEntityTypeConfiguration.cs:
+//Moved configuration for TitlarPerFörFattare from OnModelCreating() into new class TitlarPerFörfattareEntityTypeConfiguration.cs:
 public class TitlarPerFörfattareEntityTypeConfiguration : IEntityTypeConfiguration<TitlarPerFörfattare>
 {
     public void Configure(EntityTypeBuilder<TitlarPerFörfattare> builder)

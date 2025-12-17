@@ -1,5 +1,6 @@
 ﻿using Bookstore.wpf.DataAccess.Configurations;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Reflection.Emit;
@@ -40,7 +41,12 @@ public partial class BookstoreContext : DbContext
     public virtual DbSet<TitlarPerFörfattare> TitlarPerFörfattares { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Data Source=localhost;Database=FridaPadellaro.bak;Integrated Security=True;TrustServerCertificate=True;");
+    {
+        //Made connection string into a secrets.json and removed it from OnConfiguring():
+        var config = new ConfigurationBuilder().AddUserSecrets<BookstoreContext>().Build();
+        var connectionString = config["ConnectionString"];
+        optionsBuilder.UseSqlServer(connectionString);
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -243,7 +249,7 @@ public partial class BookstoreContext : DbContext
                 .HasConstraintName("FK_Recensioner_Kunder");
         });
 
-        //added according to teacher's demo-video (058):
+        //added when moving configuration for TitlarPerFörfattare from OnModelCreating() to TitlarPerFörfattareEntityTypeConfiguration.cs:
         new TitlarPerFörfattareEntityTypeConfiguration().Configure(modelBuilder.Entity<TitlarPerFörfattare>());
 
         OnModelCreatingPartial(modelBuilder);
@@ -251,3 +257,5 @@ public partial class BookstoreContext : DbContext
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }
+
+// TODO: move configuration for all entities from OnModelCreating() to EntityTypeConfiguration.cs ?
